@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        font-family: "Courier New", Courier, monospace;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: #0a0a0a;
+        color: #fff;
+        margin: 0;
+      }
+      .linha {
+        display: flex;
+        gap: 8px;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0, 255, 0, 0.1);
+        background: #111;
+      }
+      .casa {
+        width: 50px;
+        height: 50px;
+        background: #1a1a1a;
+        border: 2px solid #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        font-weight: bold;
+        text-transform: uppercase;
+        cursor: pointer;
+        user-select: none;
+        transition: all 0.2s ease;
+      }
+
+      /* .verde { background: #538d4e; border-color: #538d4e; }
+    .amarelo { background: #b59f3b; border-color: #b59f3b; }
+    .cinza { background: #3a3a3c; border-color: #3a3a3c; }*/
+
+      .casa input {
+        width: 100%;
+        height: 100%;
+        background: transparent;
+        border: none;
+        color: inherit;
+        font-family: inherit;
+        font-size: 28px;
+        font-weight: bold;
+        text-transform: uppercase;
+        text-align: center;
+        outline: none;
+        transition: all 0.2s ease;
+      }
+      .casa input:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px #00ff00;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="linha">
+      <div class="casa" data-pos="0"><input type="text" maxlength="1" /></div>
+      <div class="casa" data-pos="1"><input type="text" maxlength="1" /></div>
+      <div class="casa" data-pos="2"><input type="text" maxlength="1" /></div>
+      <div class="casa" data-pos="3"><input type="text" maxlength="1" /></div>
+      <div class="casa" data-pos="4"><input type="text" maxlength="1" /></div>
+      <div class="casa" data-pos="5"><input type="text" maxlength="1" /></div>
+    </div>
+
+    <script>
+      const casas = document.querySelectorAll(".casa input");
+
+      casas.forEach((input, index) => {
+        input.addEventListener("input", function (e) {
+          if (this.value.length === 1 && index < 5) {
+            casas[index + 1].focus();
+          }
+        });
+
+        input.addEventListener("keydown", function (e) {
+          if (e.key === "Backspace" && !this.value && index > 0) {
+            casas[index - 1].focus();
+          }
+
+          if (e.key === "Enter" && this.value.length === 1) {
+            criarNovaLinha();
+          }
+        });
+      });
+
+      function criarNovaLinha() {
+        const linhaAntiga = document.querySelector(".linha");
+        const novaLinha = linhaAntiga.cloneNode(true);
+        novaLinha.querySelectorAll("input").forEach((input) => {
+          input.value = "";
+          input.focus();
+        });
+        linhaAntiga.parentNode.appendChild(novaLinha);
+      }
+    </script>
+  </body>
+</html>
