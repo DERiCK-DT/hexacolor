@@ -10,6 +10,15 @@ body {
   height: 100%;
 }
 
+.cor-sigilosa {
+  position: absolute;
+  top: 15%;
+  left: 30%;
+  background-color: aqua; /* precisamos ver como fazer isso ser algo que pode ficar mudando, é por js? eu acho que sim */
+  width: 600px;
+  height: 175px;
+}
+
 .container-jogo {
   display: flex;
   justify-content: center;
