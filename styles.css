@@ -1,21 +1,23 @@
 body {
   font-family: "Courier New", Courier, monospace;
   background: #0a0a0a;
-  color: #fff;
+  color: #ffffff;
   margin: 0;
   height: 100vh;
 }
 
 .container-app {
+  background-color: #3b443b; /* acho que podemos usar o container para ser aleatorio e a pessoa tentar adivinhar, só falta fazer ficar aleatorio*/
   height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items:center;
+
 }
 
-.cor-sigilosa {
+.cor-sigilosa { /* é necessario manter a essa classe? (cor-sigilosa) */
   margin-top: -16px;
-  margin-bottom: 32px;
+  margin-bottom: 32px; 
   background-color: aqua; /* precisamos ver como fazer isso ser algo que pode ficar mudando, é por js? eu acho que sim */
   width: 500px;
   height: 200px;
@@ -25,6 +27,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  
 }
 
 #cabesalho {
