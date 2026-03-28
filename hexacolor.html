@@ -38,6 +38,11 @@
     </div>
 
     <script>
+      const corSigilosa = document.querySelector(".cor-sigilosa");
+
+      let corSecreta = gerarCorAleatoria();
+      corSigilosa.style.backgroundColor = gerarCorAleatoria();
+
       const casas = document.querySelectorAll(".casa input");
 
       casas.forEach((input, index) => {
@@ -57,6 +62,15 @@
           }
         });
       });
+
+      function gerarCorAleatoria() {
+        const letras = "0123456789ABCDEF";
+        let cor = "#";
+        for (let i = 0; i < 6; i++) {
+          cor += letras[Math.floor(Math.random() * 16)];
+        }
+        return cor;
+      }
 
       function criarNovaLinha() {
         const linhaAntiga = document.querySelector(".linha");

@@ -8,35 +8,36 @@ body {
 
 .container-app {
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .cor-sigilosa {
-  position: absolute;
-  top: 15%;
-  left: 30%;
+  margin-top: -16px;
+  margin-bottom: 32px;
   background-color: aqua; /* precisamos ver como fazer isso ser algo que pode ficar mudando, é por js? eu acho que sim */
-  width: 600px;
-  height: 175px;
+  width: 500px;
+  height: 200px;
 }
 
 .container-jogo {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
 }
 
 #cabesalho {
   text-align: center;
-  position: absolute;
   width: 100%;
+  font-size: 24px;
 }
 
 .linha {
   display: flex;
   gap: 8px;
   padding: 20px;
-  border-radius: 8px;
+  border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0, 255, 0, 0.1);
   background: #111;
 }
