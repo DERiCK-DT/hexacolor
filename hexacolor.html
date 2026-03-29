@@ -38,34 +38,59 @@
     </div>
 
     <script>
-      const casas = document.querySelectorAll(".casa input");
+      const corSigilosa = document.querySelector(".cor-sigilosa");
 
-      casas.forEach((input, index) => {
-        input.addEventListener("input", function (e) {
-          if (this.value.length === 1 && index < 5) {
-            casas[index + 1].focus();
-          }
+      let corSecreta = gerarCorAleatoria();
+      corSigilosa.style.backgroundColor = corSecreta;
+
+      let tentativas = 0; /*não consegui fazer o contador de tentativas funcionar, ele não faz o gerador de linhas parar .*/
+
+      const linha = document.querySelector(".linha");
+      adicionarComandos(linha);
+
+      function gerarCorAleatoria() {
+        const letras = "0123456789ABCDEF";
+        let cor = "#";
+        for (let i = 0; i < 6; i++) {
+          cor += letras[Math.floor(Math.random() * 16)];
+        }
+        return cor;
+      }
+
+      function adicionarComandos(linha) {
+        const casas = linha.querySelectorAll(".casa input");
+        casas.forEach((input, index) => {
+          input.addEventListener("input", function (e) {
+            if (this.value.length === 1 && index < 5) {
+              casas[index + 1].focus();
+            }
+          });
+
+          input.addEventListener("keydown", function (e) {
+            if (e.key === "Backspace" && !this.value && index > 0) {
+              casas[index - 1].focus();
+            }
+
+            if (e.key === "Enter" && this.value.length === 1) {
+              criarNovaLinha();
+            }
+          });
         });
-
-        input.addEventListener("keydown", function (e) {
-          if (e.key === "Backspace" && !this.value && index > 0) {
-            casas[index - 1].focus();
-          }
-
-          if (e.key === "Enter" && this.value.length === 1) {
-            criarNovaLinha();
-          }
-        });
-      });
+      }
 
       function criarNovaLinha() {
+        tentativas += 1;
+        if (tentativas === 8) {
+          return;
+        } /* ele continua gerando mais e mais linhdas depois que deveria ter parado já*/
         const linhaAntiga = document.querySelector(".linha");
         const novaLinha = linhaAntiga.cloneNode(true);
         novaLinha.querySelectorAll("input").forEach((input) => {
           input.value = "";
-          input.focus();
         });
         linhaAntiga.parentNode.appendChild(novaLinha);
+        novaLinha.querySelector("input").focus();
+        adicionarComandos(novaLinha);
       }
     </script>
   </body>
