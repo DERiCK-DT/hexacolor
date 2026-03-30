@@ -4,6 +4,7 @@ body {
   color: #ffffff;
   margin: 0;
   height: 100vh;
+  transition: transform 1s;
 }
 
 .container-app {
@@ -18,11 +19,8 @@ body {
   z-index: -1;
   top: 0px;
   left: 0px;
-  margin-top: -16px;
-  margin-bottom: 32px;
-  background-color: aqua;
   width: 100vw;
-  height: 100vw;
+  height: 100vh;
 }
 
 .container-jogo {
@@ -30,13 +28,13 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
 }
 
 #cabesalho {
   text-align: center;
   width: 100%;
-  font-size: 24px;
+  font-size: 37px;
 }
 
 .linha {
@@ -46,6 +44,16 @@ body {
   border-radius: 16px;
   box-shadow: 0 4px 20px rgba(0, 255, 0, 0.1);
   background: #111;
+}
+
+.simbolo-hashtag {
+  font-size: 36px;
+  font-weight: bold;
+  color: #fff;
+  writing-mode: horizontal-rl;
+  text-orientation: mixed;
+  display: flex;
+  align-items: center;
 }
 .casa {
   width: 50px;
@@ -80,4 +88,28 @@ body {
 .casa input:focus {
   outline: none;
   box-shadow: 0 0 0 2px #00ff00;
+}
+
+@media (max-width: 500px) {
+  body {
+    transform: scale(calc(0.8));
+  }
+}
+
+@media (max-width: 400px) {
+  body {
+    transform: scale(calc(0.7));
+  }
+}
+
+@media (max-width: 300px) {
+  body {
+    transform: scale(calc(0.6));
+  }
+}
+
+@media (max-width: 200px) {
+  body {
+    transform: scale(calc(0.5));
+  }
 }
