@@ -101,6 +101,10 @@
         }
         const linhaAntiga = document.querySelector(".linha");
         const novaLinha = linhaAntiga.cloneNode(true);
+        linhaAntiga.style.pointerEvents = "none";
+        linhaAntiga.querySelectorAll("input").forEach((el) => {
+          el.setAttribute("tabindex", "-1");
+        });
         novaLinha.querySelectorAll("input").forEach((input) => {
           input.value = "";
         });
