@@ -7,7 +7,6 @@ body {
 }
 
 .container-app {
-  background-color: #3b443b; /* acho que podemos usar o container para ser aleatorio e a pessoa tentar adivinhar, só falta fazer ficar aleatorio*/
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -15,13 +14,15 @@ body {
 }
 
 .cor-sigilosa {
-  /* é necessario manter a essa classe? (cor-sigilosa) */
-  /* essa pergunta não faz sentido, precisamos conversar sobre kkkkk*/
+  position: fixed;
+  z-index: -1;
+  top: 0px;
+  left: 0px;
   margin-top: -16px;
   margin-bottom: 32px;
   background-color: aqua;
-  width: 500px;
-  height: 200px;
+  width: 100vw;
+  height: 100vw;
 }
 
 .container-jogo {

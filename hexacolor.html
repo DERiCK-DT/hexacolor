@@ -43,7 +43,7 @@
       let corSecreta = gerarCorAleatoria();
       corSigilosa.style.backgroundColor = corSecreta;
 
-      let tentativas = 0; /*não consegui fazer o contador de tentativas funcionar, ele não faz o gerador de linhas parar .*/
+      let tentativas = 0;
 
       const linha = document.querySelector(".linha");
       adicionarComandos(linha);
@@ -80,9 +80,9 @@
 
       function criarNovaLinha() {
         tentativas += 1;
-        if (tentativas === 8) {
+        if (tentativas >= 8) {
           return;
-        } /* ele continua gerando mais e mais linhdas depois que deveria ter parado já*/
+        }
         const linhaAntiga = document.querySelector(".linha");
         const novaLinha = linhaAntiga.cloneNode(true);
         novaLinha.querySelectorAll("input").forEach((input) => {
