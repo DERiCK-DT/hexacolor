@@ -72,10 +72,26 @@
             }
 
             if (e.key === "Enter" && this.value.length === 1) {
+              verificarTentativa(this.parentElement.parentElement);
               criarNovaLinha();
             }
           });
         });
+      }
+
+      function verificarTentativa(linha) {
+        let palpite = "";
+        linha.querySelectorAll(".casa input").forEach(function (input) {
+          palpite += input.value;
+        });
+        if (palpite.length === 6) {
+          if (palpite.toUpperCase() === corSecreta.substring(1)) {
+            alert("Parabéns! Você acertou a cor!");
+            location.reload();
+          } else {
+            alert("Tente novamente!");
+          }
+        }
       }
 
       function criarNovaLinha() {
