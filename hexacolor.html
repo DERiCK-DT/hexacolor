@@ -42,10 +42,10 @@
       const corSigilosa = document.querySelector(".cor-sigilosa");
 
       const hash = document.querySelector(".simbolo-hashtag");
-      hash.style.color = gerarCorAleatoria();
 
       let corSecreta = gerarCorAleatoria();
       corSigilosa.style.backgroundColor = corSecreta;
+      hash.style.color = corSecreta;
 
       let tentativas = 0;
 
@@ -106,8 +106,9 @@
           if (palpite.toUpperCase() === corSecreta.substring(1)) {
             alert("Parabéns! Você acertou a cor!");
             location.reload();
-          } else {
-            alert("Tente novamente!");
+          } else if (tentativas >= 7) {
+            alert(`Game Over! A cor secreta era ${corSecreta}`);
+            location.reload();
           }
         }
       }
