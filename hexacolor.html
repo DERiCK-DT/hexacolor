@@ -40,6 +40,9 @@
     <script>
       const corSigilosa = document.querySelector(".cor-sigilosa");
 
+      const hash = document.querySelector(".simbolo-hashtag");
+      hash.style.color = gerarCorAleatoria();
+
       let corSecreta = gerarCorAleatoria();
       corSigilosa.style.backgroundColor = corSecreta;
 
@@ -84,6 +87,20 @@
         linha.querySelectorAll(".casa input").forEach(function (input) {
           palpite += input.value;
         });
+
+        for (let i = 0; i < 6; i++) {
+          if (palpite[i] === corSecreta[i + 1]) {
+            linha.querySelectorAll(".casa input")[i].style.backgroundColor =
+              "green";
+          } else if (corSecreta.includes(palpite[i])) {
+            linha.querySelectorAll(".casa input")[i].style.backgroundColor =
+              "yellow";
+          } else {
+            linha.querySelectorAll(".casa input")[i].style.backgroundColor =
+              "red";
+          }
+        }
+
         if (palpite.length === 6) {
           if (palpite.toUpperCase() === corSecreta.substring(1)) {
             alert("Parabéns! Você acertou a cor!");
@@ -107,6 +124,9 @@
         });
         novaLinha.querySelectorAll("input").forEach((input) => {
           input.value = "";
+        });
+        novaLinha.querySelectorAll(".casa input").forEach((input) => {
+          input.style.backgroundColor = "transparent";
         });
         linhaAntiga.parentNode.appendChild(novaLinha);
         novaLinha.querySelector("input").focus();
