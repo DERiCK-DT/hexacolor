@@ -40,97 +40,133 @@
 
     <script>
       const corSigilosa = document.querySelector(".cor-sigilosa");
-
       const hash = document.querySelector(".simbolo-hashtag");
 
-      let corSecreta = gerarCorAleatoria();
-      corSigilosa.style.backgroundColor = corSecreta;
-      hash.style.color = corSecreta;
+        let corSecreta = gerarCorAleatoria();
+        corSigilosa.style.backgroundColor = corSecreta;
+        hash.style.color = corSecreta;
 
       let tentativas = 0;
+      let jogoAtivo = true; // controla se o jogo ainda está rolando
 
       const linha = document.querySelector(".linha");
       adicionarComandos(linha);
 
       function gerarCorAleatoria() {
-        const letras = "0123456789ABCDEF";
-        let cor = "#";
-        for (let i = 0; i < 6; i++) {
-          cor += letras[Math.floor(Math.random() * 16)];
-        }
-        return cor;
+     const letras = "0123456789ABCDEF";
+      let cor = "#";
+      for (let i = 0; i < 6; i++) {
+       cor += letras[Math.floor(Math.random() * 16)];
+  }
+  return cor;
+}
+
+function adicionarComandos(linha) {
+  const casas = linha.querySelectorAll(".casa input");
+  casas.forEach((input, index) => {
+
+    // bloqueia TAB para não sair da linha
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "Tab") {
+        e.preventDefault(); // cancela o comportamento padrão do Tab
       }
 
-      function adicionarComandos(linha) {
-        const casas = linha.querySelectorAll(".casa input");
-        casas.forEach((input, index) => {
-          input.addEventListener("input", function (e) {
-            if (this.value.length === 1 && index < 5) {
-              casas[index + 1].focus();
-            }
-          });
-
-          input.addEventListener("keydown", function (e) {
-            if (e.key === "Backspace" && !this.value && index > 0) {
-              casas[index - 1].focus();
-            }
-
-            if (e.key === "Enter" && this.value.length === 1) {
-              verificarTentativa(this.parentElement.parentElement);
-              criarNovaLinha();
-            }
-          });
-        });
+      if (e.key === "Backspace" && !this.value && index > 0) {
+        casas[index - 1].focus();
       }
 
-      function verificarTentativa(linha) {
-        let palpite = "";
-        linha.querySelectorAll(".casa input").forEach(function (input) {
-          palpite += input.value;
-        });
-
-        for (let i = 0; i < 6; i++) {
-          if (palpite[i] === corSecreta[i + 1]) {
-            linha.querySelectorAll(".casa input")[i].style.backgroundColor =
-              "green";
-          } else if (corSecreta.includes(palpite[i])) {
-            linha.querySelectorAll(".casa input")[i].style.backgroundColor =
-              "yellow";
-          } else {
-            linha.querySelectorAll(".casa input")[i].style.backgroundColor =
-              "red";
-          }
-        }
-
-        if (palpite.length === 6) {
-          if (palpite.toUpperCase() === corSecreta.substring(1)) {
-            alert("Parabéns! Você acertou a cor!");
-            location.reload();
-          } else if (tentativas >= 7) {
-            alert(`Game Over! A cor secreta era ${corSecreta}`);
-            location.reload();
+      if (e.key === "Enter") {
+        const todasPreenchidas = Array.from(casas).every(i => i.value.length === 1);
+        if (todasPreenchidas && jogoAtivo) {
+          const terminou = verificarTentativa(linha);
+          if (!terminou) {
+            criarNovaLinha();
           }
         }
       }
+    });
 
-      function criarNovaLinha() {
-        tentativas += 1;
-        if (tentativas >= 8) {
-          return;
-        }
-        const linhaAntiga = document.querySelector(".linha");
-        const novaLinha = linhaAntiga.cloneNode(true);
-        linhaAntiga.style.pointerEvents = "none";
-        novaLinha.querySelectorAll("input").forEach((input) => {
-          input.value = "";
-        });
-        novaLinha.querySelectorAll(".casa input").forEach((input) => {
-          input.style.backgroundColor = "transparent";
-        });
-        linhaAntiga.parentNode.appendChild(novaLinha);
-        novaLinha.querySelector("input").focus();
-        adicionarComandos(novaLinha);
+    input.addEventListener("input", function (e) {
+      // aceita apenas caracteres hexadecimais válidos
+      this.value = this.value.replace(/[^0-9a-fA-F]/g, "");
+
+      if (this.value.length === 1 && index < 5) {
+        casas[index + 1].focus();
       }
+    });
+  });
+}
+
+function verificarTentativa(linha) {
+  let palpite = "";
+  linha.querySelectorAll(".casa input").forEach(function (input) {
+    palpite += input.value.toUpperCase(); // garante maiúsculo
+  });
+
+  const corSemHash = corSecreta.substring(1).toUpperCase();
+
+  for (let i = 0; i < 6; i++) {
+    const input = linha.querySelectorAll(".casa input")[i];
+    if (palpite[i] === corSemHash[i]) {
+      // posição certa
+      input.style.backgroundColor = "green";
+      input.style.color = "#fff";
+    } else if (corSemHash.includes(palpite[i])) {
+      // letra existe mas posição errada
+      input.style.backgroundColor = "#b59f3b"; // amarelo escuro igual ao Termo
+      input.style.color = "#fff";
+    } else {
+      // letra não existe
+      input.style.backgroundColor = "#3a3a3c"; // cinza escuro igual ao Termo
+      input.style.color = "#fff";
+    }
+  }
+
+  if (palpite === corSemHash) {
+    jogoAtivo = false;
+    setTimeout(() => {
+      alert("Parabéns! Você acertou a cor! 🎉");
+      location.reload();
+    }, 300); // pequeno delay pra mostrar as cores antes do alert
+    return true;
+  }
+
+  tentativas += 1;
+  if (tentativas >= 6) {
+    jogoAtivo = false;
+    setTimeout(() => {
+      alert(`Game Over! A cor secreta era ${corSecreta}`);
+      location.reload();
+    }, 300);
+    return true;
+  }
+
+  return false;
+}
+
+function criarNovaLinha() {
+  const containerLinhas = document.querySelector(".container-linhas");
+  const linhaAtual = containerLinhas.lastElementChild;
+  const novaLinha = linhaAtual.cloneNode(true);
+
+  // bloqueia a linha antiga
+  linhaAtual.querySelectorAll("input").forEach((input) => {
+    input.setAttribute("readonly", true);
+    input.style.pointerEvents = "none";
+  });
+
+  // limpa a nova linha
+  novaLinha.querySelectorAll("input").forEach((input) => {
+    input.value = "";
+    input.removeAttribute("readonly");
+    input.style.pointerEvents = "";
+    input.style.backgroundColor = "transparent";
+  });
+
+  containerLinhas.appendChild(novaLinha);
+  novaLinha.querySelector("input").focus();
+  adicionarComandos(novaLinha);
+}
     </script>
   </body>
 </html>
