@@ -47,7 +47,7 @@
         hash.style.color = corSecreta;
 
       let tentativas = 0;
-      let jogoAtivo = true; // controla se o jogo ainda está rolando
+      let jogoAtivo = true; /*jogo continua rolando*/
 
       const linha = document.querySelector(".linha");
       adicionarComandos(linha);
@@ -65,10 +65,10 @@ function adicionarComandos(linha) {
   const casas = linha.querySelectorAll(".casa input");
   casas.forEach((input, index) => {
 
-    // bloqueia TAB para não sair da linha
+    /*bloqueia o tab impedindo de sair da linha*/
     input.addEventListener("keydown", function (e) {
       if (e.key === "Tab") {
-        e.preventDefault(); // cancela o comportamento padrão do Tab
+        e.preventDefault(); /*tab nao sai por ai*/
       }
 
       if (e.key === "Backspace" && !this.value && index > 0) {
@@ -87,7 +87,7 @@ function adicionarComandos(linha) {
     });
 
     input.addEventListener("input", function (e) {
-      // aceita apenas caracteres hexadecimais válidos
+      /*aceita apenas numeros e letras hexadeciamis de fato*/
       this.value = this.value.replace(/[^0-9a-fA-F]/g, "");
 
       if (this.value.length === 1 && index < 5) {
@@ -100,7 +100,7 @@ function adicionarComandos(linha) {
 function verificarTentativa(linha) {
   let palpite = "";
   linha.querySelectorAll(".casa input").forEach(function (input) {
-    palpite += input.value.toUpperCase(); // garante maiúsculo
+    palpite += input.value.toUpperCase(); /*sempre maiusculo*/
   });
 
   const corSemHash = corSecreta.substring(1).toUpperCase();
@@ -108,20 +108,20 @@ function verificarTentativa(linha) {
   for (let i = 0; i < 6; i++) {
     const input = linha.querySelectorAll(".casa input")[i];
     if (palpite[i] === corSemHash[i]) {
-      // posição certa
+      /*lugar certo e existe*/
       input.style.backgroundColor = "green";
       input.style.color = "#fff";
     } else if (corSemHash.includes(palpite[i])) {
-      // letra existe mas posição errada
-      input.style.backgroundColor = "#b59f3b"; // amarelo escuro igual ao Termo
+      /*posiçao errada*/
+      input.style.backgroundColor = "#b59f3b"; /*amarelo escuro*/
       input.style.color = "#fff";
     } else {
-      // letra não existe
-      input.style.backgroundColor = "#3a3a3c"; // cinza escuro igual ao Termo
+      /*letra nao existe*/
+      input.style.backgroundColor = "#3a3a3c";  /*alterei para cinza escuro igual o termo*/
       input.style.color = "#fff";
     }
   }
-
+    /*Ganhou*/
   if (palpite === corSemHash) {
     jogoAtivo = false;
     setTimeout(() => {
@@ -130,7 +130,7 @@ function verificarTentativa(linha) {
     }, 300); // pequeno delay pra mostrar as cores antes do alert
     return true;
   }
-
+  /*Perdeu*/
   tentativas += 1;
   if (tentativas >= 6) {
     jogoAtivo = false;
@@ -143,20 +143,20 @@ function verificarTentativa(linha) {
 
   return false;
 }
-
+/*cria uma linha nova*/
 function criarNovaLinha() {
   const containerLinhas = document.querySelector(".container-linhas");
   const linhaAtual = containerLinhas.lastElementChild;
   const novaLinha = linhaAtual.cloneNode(true);
 
-  // bloqueia a linha antiga
+  /*bloqueia a linha antiga*/
   linhaAtual.querySelectorAll("input").forEach((input) => {
     input.setAttribute("readonly", true);
     input.style.pointerEvents = "none";
   });
 
-  // limpa a nova linha
-  novaLinha.querySelectorAll("input").forEach((input) => {
+  /*limpa a nova linha*/
+  novaLinha.querySelectorAll("input").forEach((input) => { 
     input.value = "";
     input.removeAttribute("readonly");
     input.style.pointerEvents = "";
