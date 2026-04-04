@@ -89,14 +89,25 @@
           palpite += input.value;
         });
 
+        let letrasRestantes = corSecreta.substring(1).split("");
+
         for (let i = 0; i < 6; i++) {
-          if (palpite[i] === corSecreta[i + 1]) {
+          if (palpite[i].toUpperCase() === corSecreta[i + 1]) {
             linha.querySelectorAll(".casa input")[i].style.backgroundColor =
               "green";
-          } else if (corSecreta.includes(palpite[i])) {
+            letrasRestantes[i] = null;
+          } 
+        }
+        
+      for (let i = 0; i < 6; i++) {
+        if (linha.querySelectorAll(".casa input")[i].style.backgroundColor === "green") {
+  continue;
+}
+        if (letrasRestantes.includes(palpite[i])) {
             linha.querySelectorAll(".casa input")[i].style.backgroundColor =
               "yellow";
-          } else {
+            letrasRestantes[letrasRestantes.indexOf(palpite[i])] = null;
+          } else  {
             linha.querySelectorAll(".casa input")[i].style.backgroundColor =
               "red";
           }
@@ -120,7 +131,7 @@
         }
         const linhaAntiga = document.querySelector(".linha");
         const novaLinha = linhaAntiga.cloneNode(true);
-        linhaAntiga.style.pointerEvents = "none";
+        linhaAntiga.style.pointerEvents = "none"; /*problema, a partir da segunda linha, não podemos clicar fora da casa, pois não deixa clicar para voltar a escrever*/
         novaLinha.querySelectorAll("input").forEach((input) => {
           input.value = "";
         });
