@@ -105,14 +105,28 @@ function verificarTentativa(linha) {
 
   const corSemHash = corSecreta.substring(1).toUpperCase();
 
+  let letrasRestantes = corSemHash.split("");
+
   for (let i = 0; i < 6; i++) {
     const input = linha.querySelectorAll(".casa input")[i];
     if (palpite[i] === corSemHash[i]) {
       /*lugar certo e existe*/
       input.style.backgroundColor = "green";
       input.style.color = "#fff";
-    } else if (corSemHash.includes(palpite[i])) {
+      letrasRestantes[i] = null;
+    }
+  }
+  
+  for (let i = 0; i < 6; i++) {
+    const input = linha.querySelectorAll(".casa input")[i];
+    if (input.style.backgroundColor === "green") {
+  continue;
+}
+    
+    if (letrasRestantes.includes(palpite[i])) {
       /*posiçao errada*/
+      let pos = letrasRestantes.indexOf(palpite[i])
+letrasRestantes[pos] = null
       input.style.backgroundColor = "#b59f3b"; /*amarelo escuro*/
       input.style.color = "#fff";
     } else {
