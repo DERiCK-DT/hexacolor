@@ -166,8 +166,8 @@
         tentativas += 1;
         if (tentativas >= 6) {
           jogoAtivo = false;
+          caraBurro.play();
           setTimeout(() => {
-            caraBurro.play();
             alert(`Game Over! A cor secreta era ${corSecreta}`);
             location.reload();
           }, 300);
