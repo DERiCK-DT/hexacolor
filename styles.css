@@ -14,6 +14,40 @@ body {
   align-items: center;
 }
 
+.container-botoes {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  height: 80px;
+  position: absolute;
+  right: 80px;
+  bottom: 80px;
+}
+
+#botao1:hover,
+#botao2:hover {
+  transform: scale(1.1) translateY(-4px);
+}
+
+#botao1,
+#botao2 {
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+  background-color: #1a1a1a;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 20px;
+  font-family: "Courier New", Courier, monospace;
+}
 .cor-sigilosa {
   z-index: -1;
   top: 0px;
@@ -35,6 +69,7 @@ body {
   text-align: center;
   width: 100%;
   font-size: 37px;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
 
 .linha {

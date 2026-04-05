@@ -12,27 +12,36 @@
       <div id="cabesalho">
         <h1>Hexarmo</h1>
       </div>
+      <div class="container-botoes">
+        <button id="botao1">
+          <span class="simbolo-hashtag">#</span> BÉÉÉÉ
+        </button>
+        <button id="botao2">
+          <span class="simbolo-hashtag">#</span> MILTON
+        </button>
+      </div>
       <div class="container-jogo">
         <div class="container-linhas">
-        <div class="linha">
-          <span class="simbolo-hashtag">#</span>
-          <div class="casa" data-pos="0">
-            <input type="text" maxlength="1" />
-          </div>
-          <div class="casa" data-pos="1">
-            <input type="text" maxlength="1" />
-          </div>
-          <div class="casa" data-pos="2">
-            <input type="text" maxlength="1" />
-          </div>
-          <div class="casa" data-pos="3">
-            <input type="text" maxlength="1" />
-          </div>
-          <div class="casa" data-pos="4">
-            <input type="text" maxlength="1" />
-          </div>
-          <div class="casa" data-pos="5">
-            <input type="text" maxlength="1" />
+          <div class="linha">
+            <span class="simbolo-hashtag">#</span>
+            <div class="casa" data-pos="0">
+              <input type="text" maxlength="1" />
+            </div>
+            <div class="casa" data-pos="1">
+              <input type="text" maxlength="1" />
+            </div>
+            <div class="casa" data-pos="2">
+              <input type="text" maxlength="1" />
+            </div>
+            <div class="casa" data-pos="3">
+              <input type="text" maxlength="1" />
+            </div>
+            <div class="casa" data-pos="4">
+              <input type="text" maxlength="1" />
+            </div>
+            <div class="casa" data-pos="5">
+              <input type="text" maxlength="1" />
+            </div>
           </div>
         </div>
       </div>
@@ -40,11 +49,17 @@
 
     <script>
       const corSigilosa = document.querySelector(".cor-sigilosa");
-      const hash = document.querySelector(".simbolo-hashtag");
+      const hash = document.querySelectorAll(".simbolo-hashtag");
+      const somBode = new Audio("bode.mp3");
+      const somMilton = new Audio("milton-bode.mp3");
+      const caraBurro = new Audio("o-cara-e-burro.mp3");
+      const intankavel = new Audio("intankavel.mp3");
 
-        let corSecreta = gerarCorAleatoria();
-        corSigilosa.style.backgroundColor = corSecreta;
-        hash.style.color = corSecreta;
+      let corSecreta = gerarCorAleatoria();
+      corSigilosa.style.backgroundColor = corSecreta;
+      hash.forEach(function (h) {
+        h.style.color = corSecreta;
+      });
 
       let tentativas = 0;
       let jogoAtivo = true; /*jogo continua rolando*/
@@ -53,134 +68,146 @@
       adicionarComandos(linha);
 
       function gerarCorAleatoria() {
-     const letras = "0123456789ABCDEF";
-      let cor = "#";
-      for (let i = 0; i < 6; i++) {
-       cor += letras[Math.floor(Math.random() * 16)];
-  }
-  return cor;
-}
-
-function adicionarComandos(linha) {
-  const casas = linha.querySelectorAll(".casa input");
-  casas.forEach((input, index) => {
-
-    /*bloqueia o tab impedindo de sair da linha*/
-    input.addEventListener("keydown", function (e) {
-      if (e.key === "Tab") {
-        e.preventDefault(); /*tab nao sai por ai*/
+        const letras = "0123456789ABCDEF";
+        let cor = "#";
+        for (let i = 0; i < 6; i++) {
+          cor += letras[Math.floor(Math.random() * 16)];
+        }
+        return cor;
       }
 
-      if (e.key === "Backspace" && !this.value && index > 0) {
-        casas[index - 1].focus();
+      function adicionarComandos(linha) {
+        const casas = linha.querySelectorAll(".casa input");
+        casas.forEach((input, index) => {
+          /*bloqueia o tab impedindo de sair da linha*/
+          input.addEventListener("keydown", function (e) {
+            if (e.key === "Tab") {
+              e.preventDefault(); /*tab nao sai por ai*/
+            }
+
+            if (e.key === "Backspace" && !this.value && index > 0) {
+              casas[index - 1].focus();
+            }
+
+            if (e.key === "Enter") {
+              const todasPreenchidas = Array.from(casas).every(
+                (i) => i.value.length === 1,
+              );
+              if (todasPreenchidas && jogoAtivo) {
+                const terminou = verificarTentativa(linha);
+                if (!terminou) {
+                  criarNovaLinha();
+                }
+              }
+            }
+          });
+
+          input.addEventListener("input", function (e) {
+            /*aceita apenas numeros e letras hexadeciamis de fato*/
+            this.value = this.value.replace(/[^0-9a-fA-F]/g, "");
+
+            if (this.value.length === 1 && index < 5) {
+              casas[index + 1].focus();
+            }
+          });
+        });
       }
 
-      if (e.key === "Enter") {
-        const todasPreenchidas = Array.from(casas).every(i => i.value.length === 1);
-        if (todasPreenchidas && jogoAtivo) {
-          const terminou = verificarTentativa(linha);
-          if (!terminou) {
-            criarNovaLinha();
+      function verificarTentativa(linha) {
+        let palpite = "";
+        linha.querySelectorAll(".casa input").forEach(function (input) {
+          palpite += input.value.toUpperCase(); /*sempre maiusculo*/
+        });
+
+        const corSemHash = corSecreta.substring(1).toUpperCase();
+
+        let letrasRestantes = corSemHash.split("");
+
+        for (let i = 0; i < 6; i++) {
+          const input = linha.querySelectorAll(".casa input")[i];
+          if (palpite[i] === corSemHash[i]) {
+            /*lugar certo e existe*/
+            input.style.backgroundColor = "green";
+            input.style.color = "#fff";
+            letrasRestantes[i] = null;
           }
         }
+
+        for (let i = 0; i < 6; i++) {
+          const input = linha.querySelectorAll(".casa input")[i];
+          if (input.style.backgroundColor === "green") {
+            continue;
+          }
+
+          if (letrasRestantes.includes(palpite[i])) {
+            /*posiçao errada*/
+            let pos = letrasRestantes.indexOf(palpite[i]);
+            letrasRestantes[pos] = null;
+            input.style.backgroundColor = "#b59f3b"; /*amarelo escuro*/
+            input.style.color = "#fff";
+          } else {
+            /*letra nao existe*/
+            input.style.backgroundColor =
+              "#3a3a3c"; /*alterei para cinza escuro igual o termo*/
+            input.style.color = "#fff";
+          }
+        }
+        /*Ganhou*/
+        if (palpite === corSemHash) {
+          jogoAtivo = false;
+          intankavel.play();
+          setTimeout(() => {
+            alert("Parabéns! Você acertou a cor! 🎉");
+            location.reload();
+          }, 300); // pequeno delay pra mostrar as cores antes do alert
+          return true;
+        }
+        /*Perdeu*/
+        tentativas += 1;
+        if (tentativas >= 6) {
+          jogoAtivo = false;
+          setTimeout(() => {
+            caraBurro.play();
+            alert(`Game Over! A cor secreta era ${corSecreta}`);
+            location.reload();
+          }, 300);
+          return true;
+        }
+
+        return false;
       }
-    });
+      /*cria uma linha nova*/
+      function criarNovaLinha() {
+        const containerLinhas = document.querySelector(".container-linhas");
+        const linhaAtual = containerLinhas.lastElementChild;
+        const novaLinha = linhaAtual.cloneNode(true);
 
-    input.addEventListener("input", function (e) {
-      /*aceita apenas numeros e letras hexadeciamis de fato*/
-      this.value = this.value.replace(/[^0-9a-fA-F]/g, "");
+        /*bloqueia a linha antiga*/
+        linhaAtual.querySelectorAll("input").forEach((input) => {
+          input.setAttribute("readonly", true);
+          input.style.pointerEvents = "none";
+        });
 
-      if (this.value.length === 1 && index < 5) {
-        casas[index + 1].focus();
+        /*limpa a nova linha*/
+        novaLinha.querySelectorAll("input").forEach((input) => {
+          input.value = "";
+          input.removeAttribute("readonly");
+          input.style.pointerEvents = "";
+          input.style.backgroundColor = "transparent";
+        });
+
+        containerLinhas.appendChild(novaLinha);
+        novaLinha.querySelector("input").focus();
+        adicionarComandos(novaLinha);
       }
-    });
-  });
-}
 
-function verificarTentativa(linha) {
-  let palpite = "";
-  linha.querySelectorAll(".casa input").forEach(function (input) {
-    palpite += input.value.toUpperCase(); /*sempre maiusculo*/
-  });
+      document.querySelector("#botao1").addEventListener("click", function () {
+        somBode.play();
+      });
 
-  const corSemHash = corSecreta.substring(1).toUpperCase();
-
-  let letrasRestantes = corSemHash.split("");
-
-  for (let i = 0; i < 6; i++) {
-    const input = linha.querySelectorAll(".casa input")[i];
-    if (palpite[i] === corSemHash[i]) {
-      /*lugar certo e existe*/
-      input.style.backgroundColor = "green";
-      input.style.color = "#fff";
-      letrasRestantes[i] = null;
-    }
-  }
-  
-  for (let i = 0; i < 6; i++) {
-    const input = linha.querySelectorAll(".casa input")[i];
-    if (input.style.backgroundColor === "green") {
-  continue;
-}
-    
-    if (letrasRestantes.includes(palpite[i])) {
-      /*posiçao errada*/
-      let pos = letrasRestantes.indexOf(palpite[i])
-letrasRestantes[pos] = null
-      input.style.backgroundColor = "#b59f3b"; /*amarelo escuro*/
-      input.style.color = "#fff";
-    } else {
-      /*letra nao existe*/
-      input.style.backgroundColor = "#3a3a3c";  /*alterei para cinza escuro igual o termo*/
-      input.style.color = "#fff";
-    }
-  }
-    /*Ganhou*/
-  if (palpite === corSemHash) {
-    jogoAtivo = false;
-    setTimeout(() => {
-      alert("Parabéns! Você acertou a cor! 🎉");
-      location.reload();
-    }, 300); // pequeno delay pra mostrar as cores antes do alert
-    return true;
-  }
-  /*Perdeu*/
-  tentativas += 1;
-  if (tentativas >= 6) {
-    jogoAtivo = false;
-    setTimeout(() => {
-      alert(`Game Over! A cor secreta era ${corSecreta}`);
-      location.reload();
-    }, 300);
-    return true;
-  }
-
-  return false;
-}
-/*cria uma linha nova*/
-function criarNovaLinha() {
-  const containerLinhas = document.querySelector(".container-linhas");
-  const linhaAtual = containerLinhas.lastElementChild;
-  const novaLinha = linhaAtual.cloneNode(true);
-
-  /*bloqueia a linha antiga*/
-  linhaAtual.querySelectorAll("input").forEach((input) => {
-    input.setAttribute("readonly", true);
-    input.style.pointerEvents = "none";
-  });
-
-  /*limpa a nova linha*/
-  novaLinha.querySelectorAll("input").forEach((input) => { 
-    input.value = "";
-    input.removeAttribute("readonly");
-    input.style.pointerEvents = "";
-    input.style.backgroundColor = "transparent";
-  });
-
-  containerLinhas.appendChild(novaLinha);
-  novaLinha.querySelector("input").focus();
-  adicionarComandos(novaLinha);
-}
+      document.querySelector("#botao2").addEventListener("click", function () {
+        somMilton.play();
+      });
     </script>
   </body>
 </html>
