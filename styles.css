@@ -166,3 +166,12 @@ body {
     transform: scale(calc(0.5));
   }
 }
+
+@media (max-width: 700px) {
+  .container-botoes {
+    position: static;
+    flex-direction: row;
+    margin-bottom: 0;
+    height: auto;
+  }
+}
